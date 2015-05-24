@@ -57,7 +57,6 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (setf (q+:spacing layout) 0))
 
 (define-initializer (gallery setup)
-  (reload-images gallery)
   (setf (q+:background-role gallery) (q+:qpalette.background))
   (setf (q+:vertical-scroll-bar-policy gallery) (q+:qt.scroll-bar-always-off))
   (setf (q+:widget-resizable gallery) T)
@@ -87,4 +86,5 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
     (with-slots-bound (gallery gallery)
       (clear-layout layout)
       (dolist (file files)
-        (q+:add-widget layout (make-instance 'thumbnail :file file))))))
+        (q+:add-widget layout (make-instance 'thumbnail :file file)))
+      (setf (image *main*) (first files)))))

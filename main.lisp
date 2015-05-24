@@ -80,7 +80,6 @@ Version: ~a"
            (ensure-controller)
            (with-main-window (window (make-instance 'main-window))
              (with-slots-bound (window main-window)
-               (setf (image viewer)
-                     #p"~/jacket_0800.jpg")))))
+               (setf (location gallery) (user-homedir-pathname))))))
     (shutdown *task-controller*)
     (setf *task-controller* NIL)))
