@@ -41,7 +41,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
         (q+:draw-image painter target image (q+:rect image))))))
 
 (define-override (thumbnail mouse-release-event) (ev)
-  (setf (image *main*) file)
+  (when (= (enum-value (q+:button ev)) (q+:qt.left-button))
+    (setf (image *main*) file))
   (stop-overriding))
 
 (define-widget gallery (QScrollArea)
