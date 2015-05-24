@@ -25,6 +25,9 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (defun draw-image-fitting (image target)
   (with-finalizing ((painter (q+:make-qpainter target)))
+    (setf (q+:render-hint painter) (values (q+:qpainter.antialiasing) T))
+    (setf (q+:render-hint painter) (values (q+:qpainter.high-quality-antialiasing) T))
+    (setf (q+:render-hint painter) (values (q+:qpainter.smooth-pixmap-transform) T))
     (let* ((width (q+:width image))
            (height (q+:height image))
            (aspect (/ width height)))
