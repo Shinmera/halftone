@@ -14,16 +14,19 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
     :file (error "FILE required.")
     :selected NIL))
 
+(define-signal (thumbnail do-update) ())
+
 (defmethod (setf selected) :after (val (thumbnail thumbnail))
-  (q+:repaint thumbnail))
+  (signal! thumbnail (do-update)))
 
 (define-initializer (thumbnail setup)
-  (setf (q+:fixed-size thumbnail) (values 128 128)))
+  (setf (q+:fixed-size thumbnail) (values 128 128))
+  (connect! thumbnail (do-update) thumbnail (update)))
 
 (define-subwidget (thumbnail image) NIL
   (with-callback-task result ('thumbnail-loader-task :file file)
     (setf image result)
-    (q+:repaint thumbnail)))
+    (signal! thumbnail (do-update))))
 
 (define-override (thumbnail paint-event) (ev)
   (declare (ignore ev))
@@ -59,7 +62,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (define-initializer (gallery setup)
   (setf (q+:background-role gallery) (q+:qpalette.background))
   (setf (q+:vertical-scroll-bar-policy gallery) (q+:qt.scroll-bar-always-off))
-  (setf (q+:widget-resizable gallery) T)
+  (setf (q+:widget-resizable gallery) NIL)
   (setf (q+:widget gallery) scrollable))
 
 (define-finalizer (gallery teardown)
@@ -87,4 +90,5 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
       (clear-layout layout)
       (dolist (file files)
         (q+:add-widget layout (make-instance 'thumbnail :file file)))
+      (setf (q+:fixed-size scrollable) (values (* 128 (length files)) 128))
       (setf (image *main*) (first files)))))
