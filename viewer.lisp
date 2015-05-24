@@ -21,7 +21,12 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
     (unless (q+:load image (uiop:native-namestring pathname))
       (error "Failed to load image from ~s" pathname))
     (setf (image viewer) image)
-    (q+:repaint viewer)))
+    (signal! viewer (do-update))))
+
+(define-signal (viewer do-update) ())
+
+(define-initializer (viewer setup)
+  (connect! viewer (do-update) viewer (update)))
 
 (define-override (viewer paint-event) (ev)
   (declare (ignore ev))
