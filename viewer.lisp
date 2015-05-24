@@ -20,7 +20,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (let ((image (q+:make-qimage)))
     (unless (q+:load image (uiop:native-namestring pathname))
       (error "Failed to load image from ~s" pathname))
-    (call-next-method image viewer)
+    (setf (image viewer) image)
     (q+:repaint viewer)))
 
 (define-override (viewer paint-event) (ev)
