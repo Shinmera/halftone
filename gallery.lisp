@@ -102,6 +102,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (define-initializer (gallery setup)
   (setf (q+:background-role gallery) (q+:qpalette.background))
   (setf (q+:vertical-scroll-bar-policy gallery) (q+:qt.scroll-bar-always-off))
+  (setf (q+:horizontal-scroll-bar-policy gallery) (q+:qt.scroll-bar-always-on))
   (setf (q+:widget-resizable gallery) NIL)
   (setf (q+:widget gallery) scrollable))
 
@@ -124,7 +125,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (let ((files (sort-files (directory-images (location gallery)) :time T)))
     (with-slots-bound (gallery gallery)
       (clear-layout layout)
-      (setf (thumbnails gallery) (make-array 0 :adjustable T :fill-pointer 0))
+      (setf thumbnails (make-array 0 :adjustable T :fill-pointer 0))
+      (setf current -1)
       (dolist (file files)
         (let ((thumb (make-instance 'thumbnail :file file)))
           (vector-push-extend thumb (thumbnails gallery))
