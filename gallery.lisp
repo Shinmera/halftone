@@ -61,8 +61,11 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
       (when (/= current -1)
         (setf (selected (elt thumbnails current)) NIL))
       (call-next-method)
-      (setf (selected (elt thumbnails current)) T)
-      (setf (image *main*) (file (elt thumbnails current))))))
+      (let ((thumbnail (elt thumbnails current)))
+        (setf (selected thumbnail) T)
+        (setf (image *main*) (file thumbnail))
+        (q+:ensure-widget-visible gallery thumbnail))))
+  num)
 
 (defmethod (setf image) ((file pathname) (gallery gallery))
   (loop for i from 0
