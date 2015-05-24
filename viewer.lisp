@@ -30,8 +30,5 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (define-override (viewer paint-event) (ev)
   (declare (ignore ev))
-  
-  (with-finalizing ((painter (q+:make-qpainter viewer)))
-    (q+:erase-rect painter (q+:rect viewer)))
   (when image
     (draw-image-fitting image viewer)))

@@ -34,9 +34,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
     (let ((brush (if selected
                      (q+:highlight (q+:palette thumbnail))
                      (q+:window (q+:palette thumbnail)))))
-      (setf (q+:composition-mode painter) (q+:qpainter.composition-mode_source-over))
-      (q+:fill-rect painter (q+:rect thumbnail) brush)
-      (setf (q+:composition-mode painter) (q+:qpainter.composition-mode_source)))
+      (q+:fill-rect painter (q+:rect thumbnail) brush))
     (when image
       (let ((target (q+:rect thumbnail)))
         (q+:adjust target 5 5 -5 -5)
