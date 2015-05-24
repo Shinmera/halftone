@@ -36,9 +36,12 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
           do (let ((tasks (make-array (length stack) :initial-contents stack)))
                (setf (fill-pointer stack) 0)
                (bt:release-lock lock)
-               (loop for task across tasks
-                     do (with-simple-restart (skip "Skip processing ~a" task)
-                          (process task))))
+               (handler-bind ((error (lambda (err)
+                                       (v:warn :task-controller "Encountered error: ~a" err)
+                                       (invoke-restart 'skip))))
+                 (loop for task across tasks
+                       do (with-simple-restart (skip "Skip processing ~a" task)
+                            (process task)))))
              (bt:acquire-lock lock)
              (when (= 0 (length stack))
                (bt:condition-wait condvar lock)))))
