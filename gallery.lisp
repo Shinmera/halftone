@@ -45,17 +45,41 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (stop-overriding))
 
 (define-widget gallery (QScrollArea)
-  ((location :initarg :location :accessor location))
+  ((location :initarg :location :accessor location)
+   (thumbnails :accessor thumbnails)
+   (current :initform -1 :accessor current))
   (:default-initargs :location (user-homedir-pathname)))
 
 (defmethod (setf location) :after (pathname (gallery gallery))
   (reload-images gallery))
+
+(defmethod (setf current) :around (num (gallery gallery))
+  (with-slots-bound (gallery gallery)
+    (when (and (/= current num)
+               (< -1 num (length thumbnails)))
+      (when (/= current -1)
+        (setf (selected (elt thumbnails current)) NIL))
+      (call-next-method)
+      (setf (selected (elt thumbnails current)) T)
+      (setf (image *main*) (file (elt thumbnails current))))))
+
+(defmethod (setf image) ((file pathname) (gallery gallery))
+  (loop for i from 0
+        for widget across (slot-value gallery 'thumbnails)
+        do (when (equalp file (file widget))
+             (setf (current gallery) i))))
 
 (define-subwidget (gallery scrollable) (q+:make-qwidget))
 
 (define-subwidget (gallery layout) (q+:make-qhboxlayout scrollable)
   (setf (q+:margin layout) 0)
   (setf (q+:spacing layout) 0))
+
+(define-override (gallery key-release-event) (ev)
+  (when (= (q+:key ev) (q+:qt.key_d))
+    (setf (current gallery) (1+ (current gallery))))
+  (when (= (q+:key ev) (q+:qt.key_a))
+    (setf (current gallery) (1- (current gallery)))))
 
 (define-initializer (gallery setup)
   (setf (q+:background-role gallery) (q+:qpalette.background))
@@ -66,10 +90,6 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (define-finalizer (gallery teardown)
   (do-layout (widget layout)
     (finalize widget)))
-
-(defmethod (setf image) ((file pathname) (gallery gallery))
-  (do-layout (widget (slot-value gallery 'layout))
-    (setf (selected widget) (equalp file (file widget)))))
 
 (defun sort-files (files by &optional descending)
   (macrolet ((sorter (comp key)
@@ -86,7 +106,10 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (let ((files (sort-files (directory-images (location gallery)) :time T)))
     (with-slots-bound (gallery gallery)
       (clear-layout layout)
+      (setf (thumbnails gallery) (make-array 0 :adjustable T :fill-pointer 0))
       (dolist (file files)
-        (q+:add-widget layout (make-instance 'thumbnail :file file)))
-      (setf (q+:fixed-size scrollable) (values (* 128 (length files)) 128))
+        (let ((thumb (make-instance 'thumbnail :file file)))
+          (vector-push-extend thumb (thumbnails gallery))
+          (q+:add-widget layout thumb)))
+      (setf (q+:fixed-size scrollable) (values (* 128 (length (thumbnails gallery))) 128))
       (setf (image *main*) (first files)))))
