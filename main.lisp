@@ -8,11 +8,6 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (in-readtable :qtools)
 
 (defvar *main*)
-(defvar *recognized-types* '("bmp" "gif" "jpg" "jpeg" "png" "pbm" "pgm" "tiff" "xbm" "xpm"))
-
-(defun image-file-p (pathname)
-  (find (pathname-type pathname) *recognized-types*
-        :test #'string-equal))
 
 (define-widget dock-container (QDockWidget)
   ((widget :initarg :widget :reader widget)
