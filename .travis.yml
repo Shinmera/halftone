@@ -11,6 +11,8 @@ install:
   # X server
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
+  # Qtools
+  - git clone https://github.com/Shinmera/qtools.git ~/quicklisp/local-projects/qtools
   # CL
   - curl https://raw.githubusercontent.com/luismbo/cl-travis/master/install.sh | bash
 
