@@ -11,7 +11,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   #-quicklisp (asdf:load-system :verbose))
 
 (asdf:defsystem halftone
-  :version "0.0.1"
+  :version "1.0.0"
   :license "Artistic"
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
   :maintainer "Nicolas Hafner <shinmera@tymoon.eu>"
