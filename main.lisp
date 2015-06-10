@@ -69,11 +69,12 @@ Version: ~a"
              (#_exec box)))))
 
 (defun start ()
+  (setf v:*global-controller* (v:make-standard-global-controller))
   (let ((*main* NIL))
     (unwind-protect
          (progn
            (ensure-controller)
-           (with-main-window (window (make-instance 'main-window))
+           (with-main-window (window 'main-window :name "Halftone")
              (with-slots-bound (window main-window)
                (setf (location gallery) (user-homedir-pathname))))))
     (shutdown *task-controller*)

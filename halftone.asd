@@ -6,6 +6,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (in-package #:cl-user)
 (eval-when (:load-toplevel :compile-toplevel :execute)
+  (push :verbose-no-init *features*)
   (asdf:load-system :verbose))
 
 (asdf:defsystem halftone
@@ -22,12 +23,12 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
                (:file "main")
                (:file "viewer")
                (:file "gallery"))
-  :depends-on (:qtools
-               :qtcore
+  :defsystem-depends-on (:qtools)
+  :depends-on (:qtcore
                :qtgui
                :qtopengl
                :uiop
                :bordeaux-threads)
-  :build-operation asdf:program-op
+  :build-operation "qt-program-op"
   :build-pathname "halftone"
   :entry-point "halftone:start")

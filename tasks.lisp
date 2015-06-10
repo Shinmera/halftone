@@ -16,6 +16,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
    (condvar :initarg :condvar :accessor condvar)
    (runnning :initarg :running :accessor running))
   (:default-initargs
+   :thread NIL
    :stack (make-array 0 :adjustable T :fill-pointer 0)
    :lock (bt:make-lock "task-stack")
    :condvar (bt:make-condition-variable :name "task-stack")
@@ -59,7 +60,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
                               (task-loop controller))
                             :initial-bindings `((*standard-output* . ,*standard-output*)
                                                 (*error-output* . ,*error-output*)
-                                                (*standard-input* . ,*standard-input*))))
+                                                (*standard-input* . ,*standard-input*))
+                            :name (format NIL "Task loop for ~s" controller)))
       (setf (running controller) T))
     controller))
 
