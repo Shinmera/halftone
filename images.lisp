@@ -26,6 +26,10 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
        (dolist (,type ',types)
          (setf (image-loader ,type) ,func)))))
 
+(define-condition image-load-error (error)
+  ((file :initarg :file :initform NIL :accessor file))
+  (:report (lambda (c s) (format s "Failed to load image ~s" (file c)))))
+
 (defun image-file-p (pathname)
   (not (null (image-loader (pathname-type pathname)))))
 
@@ -62,7 +66,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (define-image-loader (:bmp :gif :jpg :jpeg :png :pbm :pgm :tiff :xbm :xpm) (pathname)
   (let ((image (q+:make-qimage)))
     (unless (q+:load image (uiop:native-namestring pathname))
-      (error "Loading image ~s failed!" pathname))
+      (finalize image)
+      (error 'image-load-error :file pathname))
     image))
 
 (defun draw-image-fitting (image target)

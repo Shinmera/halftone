@@ -69,13 +69,15 @@ Version: ~a"
              (#_exec box)))))
 
 (defun start ()
+  #+:sbcl (sb-ext:disable-debugger)
   (setf v:*global-controller* (v:make-standard-global-controller))
   (let ((*main* NIL))
     (unwind-protect
-         (progn
+         (handler-bind ((image-load-error (lambda (err) (invoke-restart 'skip))))
            (ensure-controller)
            (with-main-window (window 'main-window :name "Halftone")
              (with-slots-bound (window main-window)
                (setf (location gallery) (user-homedir-pathname))))))
     (shutdown *task-controller*)
-    (setf *task-controller* NIL)))
+    (setf *task-controller* NIL)
+    (v:remove-global-controller)))
