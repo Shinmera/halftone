@@ -7,7 +7,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (in-package #:cl-user)
 (eval-when (:load-toplevel :compile-toplevel :execute)
   (push :verbose-no-init *features*)
-  (asdf:load-system :verbose))
+  #+quicklisp (ql:quickload :verbose)
+  #-quicklisp (asdf:load-system :verbose))
 
 (asdf:defsystem halftone
   :version "0.0.1"
