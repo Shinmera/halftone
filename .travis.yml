@@ -17,7 +17,9 @@ install:
   - curl https://raw.githubusercontent.com/luismbo/cl-travis/master/install.sh | bash
 
 script:
-  - cl -e '(ql:quickload :halftone)'
+  # Load qtools first to work around :defsystem-depends-on bug.
+  - cl -e '(ql:quickload :qtools)'
+       -e '(ql:quickload :halftone)'
        -e '(asdf:operate :program-op :halftone :force T)'
 
 notifications:
