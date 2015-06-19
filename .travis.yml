@@ -16,6 +16,8 @@ install:
   # Newer deps
   - git clone https://github.com/Shinmera/qtools.git ~/quicklisp/local-projects/qtools
   - git clone https://github.com/Shinmera/verbose.git ~/quicklisp/local-projects/verbose
+  - git clone https://github.com/Shinmera/simple-tasks.git ~/quicklisp/local-projects/simple-tasks
+  - git clone https://github.com/Shinmera/trivial-main-thread.git ~/quicklisp/local-projects/trivial-main-thread
 
 script:
   # Load qtools first to work around :defsystem-depends-on bug.
