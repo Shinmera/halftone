@@ -21,6 +21,9 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
     (setf (image viewer) (load-image pathname)))
   (signal! viewer (do-update)))
 
+(defmethod (setf image) ((null null) (viewer viewer))
+  (signal! viewer (do-update)))
+
 (define-signal (viewer do-update) ())
 
 (define-initializer (viewer setup)

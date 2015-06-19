@@ -73,6 +73,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
         do (when (equalp file (file widget))
              (setf (current gallery) i))))
 
+(defmethod (setf image) ((null null) (gallery gallery)))
+
 (define-subwidget (gallery scrollable) (q+:make-qwidget))
 
 (define-subwidget (gallery layout) (q+:make-qhboxlayout scrollable)

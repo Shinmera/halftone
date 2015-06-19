@@ -39,10 +39,9 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (defgeneric (setf image) (image thing)
   (:method (thing (main main-window))
-    (when thing
-      (with-slots-bound (main main-window)
-        (setf (image viewer) thing)
-        (setf (image gallery) thing)))))
+    (with-slots-bound (main main-window)
+      (setf (image viewer) thing)
+      (setf (image gallery) thing))))
 
 (define-menu (main-window File)
   (:item ("Open" (ctrl o))
