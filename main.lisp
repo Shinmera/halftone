@@ -26,7 +26,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (define-initializer (main-window set-main 100)
   (setf *main* main-window)
-  (setf (q+:window-title main-window) "Halftone"))
+  (setf (q+:window-title main-window) "Halftone")
+  (q+:resize main-window 800 600))
 
 (define-subwidget (main-window viewer) (make-instance 'viewer)
   (setf (q+:central-widget main-window) viewer))
@@ -78,7 +79,7 @@ Version: ~a"
            (ensure-controller)
            (with-main-window (window 'main-window :name "Halftone")
              (with-slots-bound (window main-window)
-               (setf (location gallery) (user-homedir-pathname))))))
-    (shutdown *task-controller*)
-    (setf *task-controller* NIL)
-    (v:remove-global-controller)))
+               (setf (location gallery) (user-homedir-pathname)))))
+      (shutdown *task-controller*)
+      (setf *task-controller* NIL)
+      (v:remove-global-controller))))
