@@ -18,7 +18,8 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (define-initializer (dock-container setup)
   (setf (q+:widget dock-container) widget)
-  (setf (q+:window-title dock-container) title))
+  (setf (q+:window-title dock-container) title)
+  (setf (q+:features dock-container) (q+:qdockwidget.dock-widget-movable)))
 
 (define-widget main-window (QMainWindow)
   ())
