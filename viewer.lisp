@@ -16,10 +16,10 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
     (finalize (image viewer))
     (setf (slot-value viewer 'image) NIL)))
 
-(defmethod (setf image) ((pathname pathname) (viewer viewer))
-  (with-simple-restart (skip "Do not set the image.")
-    (setf (image viewer) (load-image pathname)))
-  (signal! viewer (do-update)))
+(defmethod (setf image) ((file pathname) (viewer viewer))
+  (with-callback-task (image-loader-task :file file) (result)
+    (setf (image viewer) result)
+    (signal! viewer (do-update))))
 
 (defmethod (setf image) ((null null) (viewer viewer))
   (signal! viewer (do-update)))
@@ -31,7 +31,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 
 (define-override (viewer paint-event) (ev)
   (declare (ignore ev))
-  (if image
-      (draw-image-fitting image viewer)
-      (with-finalizing ((painter (q+:make-qpainter viewer)))
-        (q+:erase-rect painter (q+:rect viewer)))))
+  (with-finalizing ((painter (q+:make-qpainter viewer)))
+    (q+:erase-rect painter (q+:rect viewer)))
+  (when image
+    (draw-image-fitting image viewer)))

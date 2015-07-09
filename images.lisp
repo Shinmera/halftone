@@ -36,8 +36,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (defun load-image (pathname)
   (let ((loader (image-loader (pathname-type pathname))))
     (unless loader
-      (error "Unknown image type ~s. Cannot load ~s."
-             (pathname-type pathname) pathname))
+      (error 'image-load-error :file pathname))
     (funcall loader pathname)))
 
 (defun load-thumbnail (pathname &optional (size 128))
@@ -46,21 +45,28 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
     (with-finalizing ((orig (load-image pathname)))
       (draw-image-fitting orig image))))
 
-(defclass image-loader-task (callback-task)
-  ((file :initarg :file :accessor file))
+(defvar *image-runner* (make-instance 'simple-tasks:queued-runner))
+
+(defclass image-loader-task (simple-tasks:task)
+  ((file :initarg :file :accessor file)
+   (callback :initarg :callback :accessor callback))
   (:default-initargs :file (error "FILE required.")))
 
 (defmethod print-object ((task image-loader-task) stream)
   (print-unreadable-object (task stream :type T)
     (format stream ":FILE ~s" (file task))))
 
-(defmethod process ((task image-loader-task))
+(defmethod simple-tasks:run-task ((task image-loader-task))
   (load-image (file task)))
+
+(defmethod simple-tasks:run-task :around ((task image-loader-task))
+  (apply (callback task)
+         (multiple-value-list (call-next-method))))
 
 (defclass thumbnail-loader-task (image-loader-task)
   ())
 
-(defmethod process ((task thumbnail-loader-task))
+(defmethod simple-tasks:run-task ((task thumbnail-loader-task))
   (load-thumbnail (file task)))
 
 (define-image-loader (:bmp :gif :jpg :jpeg :png :pbm :pgm :tiff :xbm :xpm) (pathname)
@@ -91,3 +97,6 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
                        image
                        (q+:rect image)))))
   target)
+
+(defmacro with-callback-task ((task &rest targs) args &body body)
+  `(simple-tasks:schedule-task (make-instance ',task ,@targs :callback (lambda ,args ,@body)) *image-runner*))

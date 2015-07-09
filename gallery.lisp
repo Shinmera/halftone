@@ -24,7 +24,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (connect! thumbnail (do-update) thumbnail (update)))
 
 (define-subwidget (thumbnail image) NIL
-  (with-callback-task result ('thumbnail-loader-task :file file)
+  (with-callback-task (thumbnail-loader-task :file file) (result)
     (setf image result)
     (signal! thumbnail (do-update))))
 

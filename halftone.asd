@@ -19,7 +19,6 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   :homepage "https://github.com/Shinmera/halftone"
   :serial T
   :components ((:file "package")
-               (:file "tasks")
                (:file "images")
                (:file "main")
                (:file "viewer")
@@ -29,6 +28,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
                :qtgui
                :qtopengl
                :uiop
+               :simple-tasks
                :bordeaux-threads)
   :build-operation "qt-program-op"
   :build-pathname "halftone"

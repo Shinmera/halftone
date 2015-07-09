@@ -75,11 +75,10 @@ Version: ~a"
   (setf v:*global-controller* (v:make-standard-global-controller))
   (let ((*main* NIL))
     (unwind-protect
-         (handler-bind ((image-load-error (lambda (err) (invoke-restart 'skip))))
-           (ensure-controller)
+         (progn
+           (bt:make-thread (lambda () (simple-tasks:start-runner *image-runner*)))
            (with-main-window (window 'main-window :name "Halftone")
              (with-slots-bound (window main-window)
                (setf (location gallery) (user-homedir-pathname)))))
-      (shutdown *task-controller*)
-      (setf *task-controller* NIL)
+      (simple-tasks:stop-runner *image-runner*)
       (v:remove-global-controller))))
