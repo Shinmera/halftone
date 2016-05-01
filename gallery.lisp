@@ -138,7 +138,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
 (defun reload-images (gallery)
   (let ((files (sort-files (directory-images (location gallery)) :time T)))
     (with-slots-bound (gallery gallery)
-      (clear-layout layout)
+      (sweep-layout layout)
       (setf thumbnails (make-array 0 :adjustable T :fill-pointer 0))
       (setf current -1)
       (dolist (file files)
