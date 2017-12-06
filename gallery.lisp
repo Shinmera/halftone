@@ -130,7 +130,7 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
                                 (if descending (not result) result)))))
     (sort files (ecase by
                   (:name (sorter string< pathname-name))
-                  (:time (sorter uiop:stamp< uiop:safe-file-write-date))))))
+                  (:time (sorter #.(or (find-symbol "STAMP<" "UIOP") (find-symbol "TIMESTAMP<" "UIOP")) uiop:safe-file-write-date))))))
 
 (defun directory-images (dir)
   (remove-if-not #'image-file-p (uiop:directory-files dir)))
