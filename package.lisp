@@ -9,4 +9,5 @@ Author: Nicolas Hafner <shinmera@tymoon.eu>
   (:nicknames #:org.shirakumo.halftone)
   (:use #:cl+qt)
   (:export
+   #:main
    #:start))

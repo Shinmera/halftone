@@ -70,15 +70,20 @@ Version: ~a"
                                          (asdf:component-version system)))
              (#_exec box)))))
 
+(defun main ()
+  (unwind-protect
+       (progn
+         (bt:make-thread (lambda () (simple-tasks:start-runner *image-runner*)))
+         (with-main-window (window 'main-window :name "Halftone")
+           (with-slots-bound (window main-window)
+             (setf (location gallery) (user-homedir-pathname)))))
+    (simple-tasks:stop-runner *image-runner*)))
+
 (defun start ()
   #+:sbcl (sb-ext:disable-debugger)
   (setf v:*global-controller* (v:make-standard-global-controller))
   (let ((*main* NIL))
-    (unwind-protect
-         (progn
-           (bt:make-thread (lambda () (simple-tasks:start-runner *image-runner*)))
-           (with-main-window (window 'main-window :name "Halftone")
-             (with-slots-bound (window main-window)
-               (setf (location gallery) (user-homedir-pathname)))))
-      (simple-tasks:stop-runner *image-runner*)
-      (v:remove-global-controller))))
+    (main)))
+
+(deploy:define-hook (:deploy stop-verbose) ()
+  (v:remove-global-controller))

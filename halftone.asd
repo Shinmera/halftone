@@ -4,11 +4,6 @@
  Author: Nicolas Hafner <shinmera@tymoon.eu>
 |#
 
-(eval-when (:load-toplevel :compile-toplevel :execute)
-  (push :verbose-no-init *features*)
-  #+quicklisp (ql:quickload :verbose)
-  #-quicklisp (asdf:load-system :verbose))
-
 (asdf:defsystem halftone
   :version "1.1.0"
   :license "Artistic"
@@ -23,10 +18,12 @@
                (:file "viewer")
                (:file "gallery"))
   :defsystem-depends-on (:qtools)
-  :depends-on (:qtcore
+  :depends-on (:qtools
+               :qtcore
                :qtgui
                :qtopengl
                :uiop
+               :verbose
                :simple-tasks
                :bordeaux-threads)
   :build-operation "qt-program-op"
