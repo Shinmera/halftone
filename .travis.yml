@@ -23,7 +23,7 @@ script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   # Build binary
-  - ros -s qtools -s halftone -e '(asdf:operate :program-op :halftone :force T)'
+  - ros -s qtools -s halftone -e '(asdf:make :halftone :force T)'
 
 notifications:
   email:
