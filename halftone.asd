@@ -10,7 +10,9 @@
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
   :maintainer "Nicolas Hafner <shinmera@tymoon.eu>"
   :description "An image viewer using Qtools"
-  :homepage "https://github.com/Shinmera/halftone"
+  :homepage "https://Shinmera.github.io/halftone/"
+  :bug-tracker "https://github.com/Shinmera/halftone/issues"
+  :source-control (:git "https://github.com/Shinmera/halftone.git")
   :serial T
   :components ((:file "package")
                (:file "images")
